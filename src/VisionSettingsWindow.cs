@@ -8,7 +8,7 @@ namespace KerbVisionIR
     public class VisionSettingsWindow : MonoBehaviour
     {
         private bool windowVisible = false;
-        private Rect windowRect = new Rect(100, 100, 350, 420);
+        private Rect windowRect = new Rect(100, 100, 350, 520);
         private int windowId;
         
         private void Start()
@@ -106,22 +106,37 @@ namespace KerbVisionIR
             }
             GUILayout.EndHorizontal();
             
-            // Grain/Noise slider - REAL TIME
+            // Grain/Noise slider - REAL TIME (0 to 3)
             GUILayout.BeginHorizontal();
             GUILayout.Label($"Grain/Noise: {settings.GrainIntensity:F2}", GUILayout.Width(150));
-            float newGrain = GUILayout.HorizontalSlider(settings.GrainIntensity, 0f, 1f, GUILayout.Width(180));
+            float newGrain = GUILayout.HorizontalSlider(settings.GrainIntensity, 0f, 3f, GUILayout.Width(180));
             if (Mathf.Abs(newGrain - settings.GrainIntensity) > 0.001f)
             {
                 settings.GrainIntensity = newGrain;
             }
             GUILayout.EndHorizontal();
             
-            GUILayout.Space(10);
-            GUILayout.Label("Low-res grayscale + full-res tint for performance", HighLogic.Skin.label);
+            GUILayout.Space(20);
+            
+            // === PERFORMANCE SECTION ===
+            GUILayout.Label("=== PERFORMANCE ===", HighLogic.Skin.label);
+            
+            // Processing Quality slider
+            GUILayout.BeginHorizontal();
+            string[] qualityLabels = { "Full (1/1)", "High (1/2)", "Med (1/3)", "Low (1/4)" };
+            int qualityIndex = settings.ProcessingQuality - 1; // 1-4 to 0-3
+            GUILayout.Label($"Quality: {qualityLabels[qualityIndex]}", GUILayout.Width(150));
+            int newQualityIndex = Mathf.RoundToInt(GUILayout.HorizontalSlider(qualityIndex, 0f, 3f, GUILayout.Width(180)));
+            if (newQualityIndex != qualityIndex)
+            {
+                settings.ProcessingQuality = newQualityIndex + 1; // 0-3 to 1-4
+            }
+            GUILayout.EndHorizontal();
+            GUILayout.Label("  ?? Higher quality = MUCH lower FPS!", HighLogic.Skin.label);
             
             GUILayout.Space(10);
             
-            // Hotkey info at bottom
+            // Hotkey info
             string keyNameBottom = settings.ToggleKey == KeyCode.BackQuote ? "`" : settings.ToggleKey.ToString();
             GUILayout.Label($"Toggle Hotkey: Alt + {keyNameBottom}", HighLogic.Skin.label);
             
@@ -138,6 +153,7 @@ namespace KerbVisionIR
                 settings.Contrast = defaults.Contrast;
                 settings.TintStrength = defaults.TintStrength;
                 settings.GrainIntensity = defaults.GrainIntensity;
+                settings.ProcessingQuality = defaults.ProcessingQuality;
                 SaveSettings();
                 ScreenMessages.PostScreenMessage("Settings reset to defaults", 2f, ScreenMessageStyle.UPPER_CENTER);
             }

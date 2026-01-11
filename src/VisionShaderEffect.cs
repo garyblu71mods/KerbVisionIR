@@ -261,14 +261,15 @@ namespace KerbVisionIR
         
         private void ApplyGrayscaleEffect(RenderTexture source, RenderTexture destination, VisionSettings settings)
         {
-            // Ultra-low res for grayscale conversion (performance)
-            int processWidth = source.width / 4;
-            int processHeight = source.height / 4;
+            // Quality setting: 1=full, 2=1/2, 3=1/3, 4=1/4
+            int divisor = settings.ProcessingQuality;
+            int processWidth = source.width / divisor;
+            int processHeight = source.height / divisor;
             
             // Log once every 60 frames for debugging
             if (Time.frameCount % 60 == 0)
             {
-                Debug.Log($"[KerbVisionIR] Processing grayscale: {processWidth}x{processHeight}, Mode: {settings.Mode}, Contrast: {settings.Contrast:F2}");
+                Debug.Log($"[KerbVisionIR] Processing: {processWidth}x{processHeight} (Quality: 1/{divisor}), Mode: {settings.Mode}, Contrast: {settings.Contrast:F2}");
             }
             
             RenderTexture tempLowRes = RenderTexture.GetTemporary(processWidth, processHeight, 0, RenderTextureFormat.ARGB32);
@@ -344,12 +345,15 @@ namespace KerbVisionIR
             if (!settings.IsEnabled)
                 return;
             
-            // Draw grain overlay - static, much stronger
+            // Draw grain overlay - static, much stronger, AVOID GUI AREAS
             if (settings.GrainIntensity > 0.01f && grainTexture != null)
             {
-                // Doubled intensity: 0.7 ? 1.4 (but clamped by alpha)
-                // Removed Time.time for static grain
-                GUI.color = new Color(1, 1, 1, Mathf.Min(settings.GrainIntensity * 1.4f, 1.0f));
+                // Increased range to 0-3 (3x multiplier max)
+                // Draw only on game view, not on GUI windows
+                float alpha = Mathf.Min(settings.GrainIntensity * 0.5f, 1.0f);
+                GUI.color = new Color(1, 1, 1, alpha);
+                
+                // Draw grain texture tiled across screen
                 GUI.DrawTextureWithTexCoords(new Rect(0, 0, Screen.width, Screen.height), grainTexture, 
                     new Rect(0, 0, Screen.width / 256f, Screen.height / 256f));
                 GUI.color = Color.white;

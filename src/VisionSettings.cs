@@ -8,7 +8,7 @@ namespace KerbVisionIR
     public class VisionSettings
     {
         // Version info
-        public const string VERSION = "v0.4.3-TEST";
+        public const string VERSION = "v0.4.4";
         public const string BUILD_DATE = "2025-01-09";
         public const string TEST_BUILD_FOR = "bane_iz_missing";
         
@@ -28,7 +28,10 @@ namespace KerbVisionIR
         public float Brightness = 1.0f;    // Brightness multiplier (0-2, default 1.0 = normal)
         public float Contrast = 0.0f;      // Contrast adjustment (-0.5 to 0.5 actual, displayed as -1 to 1)
         public float TintStrength = 0.8f;  // Color overlay strength (0-1)
-        public float GrainIntensity = 0.7f; // Noise/grain amount (0-1, increased default)
+        public float GrainIntensity = 0.7f; // Noise/grain amount (0-3, increased range)
+        
+        // Performance setting
+        public int ProcessingQuality = 4;  // 1=full res, 2=1/2, 3=1/3, 4=1/4 (default)
         
         // Hotkey - Alt + `
         public KeyCode ToggleKey = KeyCode.BackQuote;
@@ -70,6 +73,7 @@ namespace KerbVisionIR
                 Contrast = 0.0f,
                 TintStrength = 0.8f,
                 GrainIntensity = 0.7f,
+                ProcessingQuality = 4,
                 ToggleKey = KeyCode.BackQuote,
                 RequireAlt = true
             };

@@ -49,7 +49,8 @@ namespace KerbVisionIR
                 settings.Brightness = ParseFloatRange(visionNode, "brightness", 1.0f, 0f, 2f);
                 settings.Contrast = ParseFloatRange(visionNode, "contrast", 0.0f, -0.5f, 0.5f);
                 settings.TintStrength = ParseFloat(visionNode, "tintStrength", 0.8f);
-                settings.GrainIntensity = ParseFloat(visionNode, "grainIntensity", 0.7f);
+                settings.GrainIntensity = ParseFloatRange(visionNode, "grainIntensity", 0.7f, 0f, 3f);
+                settings.ProcessingQuality = ParseInt(visionNode, "processingQuality", 4);
                 settings.ToggleKey = ParseEnum<KeyCode>(visionNode, "toggleKey", KeyCode.BackQuote);
                 
                 Debug.Log("[KerbVisionIR] Settings loaded successfully");
@@ -85,6 +86,7 @@ namespace KerbVisionIR
                 visionNode.AddValue("contrast", settings.Contrast.ToString("F3"));
                 visionNode.AddValue("tintStrength", settings.TintStrength.ToString("F3"));
                 visionNode.AddValue("grainIntensity", settings.GrainIntensity.ToString("F3"));
+                visionNode.AddValue("processingQuality", settings.ProcessingQuality.ToString());
                 visionNode.AddValue("toggleKey", settings.ToggleKey.ToString());
                 
                 rootNode.Save(ConfigPath);
@@ -115,6 +117,13 @@ namespace KerbVisionIR
         {
             if (node.HasValue(key) && float.TryParse(node.GetValue(key), out float result))
                 return Mathf.Clamp(result, min, max);
+            return defaultValue;
+        }
+        
+        private static int ParseInt(ConfigNode node, string key, int defaultValue)
+        {
+            if (node.HasValue(key) && int.TryParse(node.GetValue(key), out int result))
+                return Mathf.Clamp(result, 1, 4);
             return defaultValue;
         }
         

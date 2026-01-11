@@ -81,10 +81,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Shaders\NightVisionShader.shader" />
-    <None Include="BUILDING_ASSETBUNDLE.md" />
     <None Include="GameData\KerbVisionIR\Shaders\NightVision.shader" />
-    <None Include="HOTKEY_FIX.md" />
-    <None Include="TEST_CHECKLIST.md" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
