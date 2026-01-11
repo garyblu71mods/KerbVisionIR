@@ -27,6 +27,10 @@ namespace KerbVisionIR
             // Load settings
             Settings = VisionConfig.Load();
             
+            // FORCE disabled on startup - IMPORTANT!
+            Settings.IsEnabled = false;
+            Debug.Log("[KerbVisionIR] Effect forced OFF on startup - use Alt+` to enable");
+            
             // Debug log to verify hotkey
             Debug.Log($"[KerbVisionIR] Loaded hotkey: {Settings.ToggleKey} (RequireAlt: {Settings.RequireAlt})");
             
