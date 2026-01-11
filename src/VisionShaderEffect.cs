@@ -345,18 +345,117 @@ namespace KerbVisionIR
             if (!settings.IsEnabled)
                 return;
             
-            // Draw grain overlay - static, much stronger, AVOID GUI AREAS
+            // Don't draw grain when UI is active (pause, dialogs)
+            if (InputLockManager.IsAllLocked(ControlTypes.All))
+                return;
+            
+            // Draw grain overlay - always in deepest background
             if (settings.GrainIntensity > 0.01f && grainTexture != null)
             {
-                // Increased range to 0-3 (3x multiplier max)
-                // Draw only on game view, not on GUI windows
-                float alpha = Mathf.Min(settings.GrainIntensity * 0.5f, 1.0f);
-                GUI.color = new Color(1, 1, 1, alpha);
+                // Draw at maximum depth (behind everything)
+                GUI.depth = int.MaxValue;
                 
-                // Draw grain texture tiled across screen
+                // Base grain effect
+                float baseAlpha = Mathf.Min(settings.GrainIntensity * 0.5f, 1.0f);
+                GUI.color = new Color(1, 1, 1, baseAlpha);
+                
+                // Draw grain texture tiled across entire screen
                 GUI.DrawTextureWithTexCoords(new Rect(0, 0, Screen.width, Screen.height), grainTexture, 
                     new Rect(0, 0, Screen.width / 256f, Screen.height / 256f));
+                
+                // Night vision artifacts for high grain (> 2.0)
+                if (settings.GrainIntensity > 2.0f)
+                {
+                    float artifactIntensity = Mathf.Min((settings.GrainIntensity - 2.0f) * 0.5f, 1.0f); // 0.0 to 1.0, slower ramp
+                    
+                    // 1. Scanlines effect (horizontal lines)
+                    DrawScanlines(artifactIntensity);
+                    
+                    // 2. Vignette darkening (edges darker)
+                    DrawVignette(artifactIntensity);
+                    
+                    // 3. Random bright spots (phosphor burn-in effect) - MORE!
+                    DrawPhosphorSpots(artifactIntensity);
+                    
+                    // 4. Rolling bars (like old CRT TV interference)
+                    DrawRollingBars(artifactIntensity);
+                }
+                
                 GUI.color = Color.white;
+                GUI.depth = 0;
+            }
+        }
+        
+        private void DrawScanlines(float intensity)
+        {
+            // Horizontal scanlines like CRT/NV display
+            int lineSpacing = 4; // Every 4 pixels
+            GUI.color = new Color(0, 0, 0, intensity * 0.15f);
+            
+            for (int y = 0; y < Screen.height; y += lineSpacing)
+            {
+                GUI.DrawTexture(new Rect(0, y, Screen.width, 1), Texture2D.whiteTexture);
+            }
+        }
+        
+        private void DrawVignette(float intensity)
+        {
+            // Darken edges like real night vision optics - rectangular style
+            int vignetteSize = Mathf.RoundToInt(Screen.height * 0.15f);
+            GUI.color = new Color(0, 0, 0, intensity * 0.3f);
+            
+            // Top edge
+            GUI.DrawTexture(new Rect(0, 0, Screen.width, vignetteSize), Texture2D.whiteTexture);
+            // Bottom edge
+            GUI.DrawTexture(new Rect(0, Screen.height - vignetteSize, Screen.width, vignetteSize), Texture2D.whiteTexture);
+            // Left edge
+            GUI.DrawTexture(new Rect(0, 0, vignetteSize, Screen.height), Texture2D.whiteTexture);
+            // Right edge
+            GUI.DrawTexture(new Rect(Screen.width - vignetteSize, 0, vignetteSize, Screen.height), Texture2D.whiteTexture);
+        }
+        
+        private void DrawPhosphorSpots(float intensity)
+        {
+            // Random bright spots (phosphor artifacts in tube-based NV) - MANY MORE!
+            if (Time.frameCount % 5 == 0) // Update every 5 frames (was 10) = more frequent
+            {
+                int spotCount = Mathf.RoundToInt(intensity * 15); // 0-15 spots (was 5) = MORE!
+                GUI.color = new Color(1, 1, 1, intensity * 0.5f); // Slightly brighter
+                
+                for (int i = 0; i < spotCount; i++)
+                {
+                    float x = (float)random.NextDouble() * Screen.width;
+                    float y = (float)random.NextDouble() * Screen.height;
+                    float size = 1f + (float)random.NextDouble() * 4f; // Varied sizes
+                    
+                    GUI.DrawTexture(new Rect(x, y, size, size), Texture2D.whiteTexture);
+                }
+            }
+        }
+        
+        private void DrawRollingBars(float intensity)
+        {
+            // White rolling bars falling down screen like CRT interference
+            // Multiple bars with different speeds
+            
+            int barCount = Mathf.RoundToInt(intensity * 3); // 0-3 bars at once
+            
+            for (int i = 0; i < barCount; i++)
+            {
+                // Each bar has different speed and position based on time
+                float speed = 200f + (i * 50f); // Different speeds for each bar
+                float yPos = (Time.time * speed + (i * Screen.height / 3)) % (Screen.height + 100);
+                
+                int barHeight = 3 + random.Next(5); // Random height 3-8 pixels
+                float alpha = intensity * (0.3f + (float)random.NextDouble() * 0.3f); // 0.3-0.6 alpha
+                
+                // Draw bright horizontal bar
+                GUI.color = new Color(1, 1, 1, alpha);
+                GUI.DrawTexture(new Rect(0, yPos, Screen.width, barHeight), Texture2D.whiteTexture);
+                
+                // Draw darker trailing edge for motion effect
+                GUI.color = new Color(1, 1, 1, alpha * 0.3f);
+                GUI.DrawTexture(new Rect(0, yPos - barHeight * 2, Screen.width, barHeight), Texture2D.whiteTexture);
             }
         }
         

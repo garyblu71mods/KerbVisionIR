@@ -8,7 +8,7 @@ namespace KerbVisionIR
     public class VisionSettings
     {
         // Version info
-        public const string VERSION = "v0.4.4";
+        public const string VERSION = "v0.5.0";
         public const string BUILD_DATE = "2025-01-09";
         public const string TEST_BUILD_FOR = "bane_iz_missing";
         

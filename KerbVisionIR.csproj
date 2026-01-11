@@ -69,6 +69,10 @@
       <HintPath>..\..\..\..\..\..\Program Files\Epic Games\KerbalSpaceProgram\English\KSP_x64_Data\Managed\UnityEngine.AssetBundleModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="UnityEngine.AudioModule">
+      <HintPath>..\..\..\..\..\..\Program Files\Epic Games\KerbalSpaceProgram\English\KSP_x64_Data\Managed\UnityEngine.AudioModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="src\KerbVisionIR.cs" />

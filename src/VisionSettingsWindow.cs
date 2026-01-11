@@ -8,7 +8,7 @@ namespace KerbVisionIR
     public class VisionSettingsWindow : MonoBehaviour
     {
         private bool windowVisible = false;
-        private Rect windowRect = new Rect(100, 100, 350, 520);
+        private Rect windowRect = new Rect(100, 100, 380, 420);
         private int windowId;
         
         private void Start()
@@ -31,14 +31,18 @@ namespace KerbVisionIR
             
             GUILayout.BeginVertical();
             
-            // TEST BUILD INFO
+            // Header: Version and build date
             GUILayout.BeginHorizontal();
-            GUILayout.Label($"TEST BUILD FOR: {VisionSettings.TEST_BUILD_FOR}", HighLogic.Skin.label);
+            GUILayout.Label($"KerbVision IR - {VisionSettings.VERSION}", HighLogic.Skin.label);
+            GUILayout.FlexibleSpace();
+            GUILayout.Label(VisionSettings.BUILD_DATE, HighLogic.Skin.label);
             GUILayout.EndHorizontal();
             
-            GUILayout.BeginHorizontal();
-            GUILayout.Label($"Version: {VisionSettings.VERSION} | {VisionSettings.BUILD_DATE}", HighLogic.Skin.label);
-            GUILayout.EndHorizontal();
+            GUILayout.Space(5);
+            
+            // Hotkey info
+            string keyName = settings.ToggleKey == KeyCode.BackQuote ? "`" : settings.ToggleKey.ToString();
+            GUILayout.Label($"Toggle: Alt + {keyName}", HighLogic.Skin.label);
             
             GUILayout.Space(10);
             
@@ -55,18 +59,16 @@ namespace KerbVisionIR
             GUILayout.Space(10);
             
             // Vision mode dropdown
-            GUILayout.Label("Vision Mode:", HighLogic.Skin.label);
-            
-            string[] modeNames = { "Monochrome", "Green NV", "Amber/Warm" };
-            int currentMode = (int)settings.Mode;
-            
             GUILayout.BeginHorizontal();
-            if (GUILayout.Button(modeNames[currentMode], HighLogic.Skin.button, GUILayout.Width(330)))
+            GUILayout.Label("Vision Mode:", GUILayout.Width(120));
+            
+            string[] modeNames = System.Enum.GetNames(typeof(VisionSettings.VisionMode));
+            int currentIndex = (int)settings.Mode;
+            int newIndex = GUILayout.SelectionGrid(currentIndex, modeNames, 1, GUILayout.Width(200));
+            
+            if (newIndex != currentIndex)
             {
-                // Cycle through modes
-                currentMode = (currentMode + 1) % modeNames.Length;
-                settings.Mode = (VisionSettings.VisionMode)currentMode;
-                SaveSettings();
+                settings.Mode = (VisionSettings.VisionMode)newIndex;
             }
             GUILayout.EndHorizontal();
             
@@ -81,20 +83,18 @@ namespace KerbVisionIR
                 settings.Brightness = newBrightness;
             }
             GUILayout.EndHorizontal();
-            GUILayout.Label("  0=dark, 1=normal, 2=very bright", HighLogic.Skin.label);
             
             // Contrast slider - REAL TIME (-1 to 1 displayed, -0.5 to 0.5 actual)
             GUILayout.BeginHorizontal();
-            float displayContrast = settings.Contrast * 2f; // -0.5?-1, 0.5?1
+            float displayContrast = settings.Contrast * 2f;
             GUILayout.Label($"Contrast: {displayContrast:F2}", GUILayout.Width(150));
             float newDisplayContrast = GUILayout.HorizontalSlider(displayContrast, -1f, 1f, GUILayout.Width(180));
-            float newContrast = newDisplayContrast * 0.5f; // -1?-0.5, 1?0.5
+            float newContrast = newDisplayContrast * 0.5f;
             if (Mathf.Abs(newContrast - settings.Contrast) > 0.001f)
             {
                 settings.Contrast = newContrast;
             }
             GUILayout.EndHorizontal();
-            GUILayout.Label("  -1=flat, 0=normal, 1=high contrast", HighLogic.Skin.label);
             
             // Tint Strength slider - REAL TIME
             GUILayout.BeginHorizontal();
@@ -106,10 +106,10 @@ namespace KerbVisionIR
             }
             GUILayout.EndHorizontal();
             
-            // Grain/Noise slider - REAL TIME (0 to 3)
+            // Grain/Noise slider - REAL TIME (0 to 4)
             GUILayout.BeginHorizontal();
             GUILayout.Label($"Grain/Noise: {settings.GrainIntensity:F2}", GUILayout.Width(150));
-            float newGrain = GUILayout.HorizontalSlider(settings.GrainIntensity, 0f, 3f, GUILayout.Width(180));
+            float newGrain = GUILayout.HorizontalSlider(settings.GrainIntensity, 0f, 4f, GUILayout.Width(180));
             if (Mathf.Abs(newGrain - settings.GrainIntensity) > 0.001f)
             {
                 settings.GrainIntensity = newGrain;
@@ -124,21 +124,15 @@ namespace KerbVisionIR
             // Processing Quality slider
             GUILayout.BeginHorizontal();
             string[] qualityLabels = { "Full (1/1)", "High (1/2)", "Med (1/3)", "Low (1/4)" };
-            int qualityIndex = settings.ProcessingQuality - 1; // 1-4 to 0-3
+            int qualityIndex = settings.ProcessingQuality - 1;
             GUILayout.Label($"Quality: {qualityLabels[qualityIndex]}", GUILayout.Width(150));
             int newQualityIndex = Mathf.RoundToInt(GUILayout.HorizontalSlider(qualityIndex, 0f, 3f, GUILayout.Width(180)));
             if (newQualityIndex != qualityIndex)
             {
-                settings.ProcessingQuality = newQualityIndex + 1; // 0-3 to 1-4
+                settings.ProcessingQuality = newQualityIndex + 1;
             }
             GUILayout.EndHorizontal();
-            GUILayout.Label("  ?? Higher quality = MUCH lower FPS!", HighLogic.Skin.label);
-            
-            GUILayout.Space(10);
-            
-            // Hotkey info
-            string keyNameBottom = settings.ToggleKey == KeyCode.BackQuote ? "`" : settings.ToggleKey.ToString();
-            GUILayout.Label($"Toggle Hotkey: Alt + {keyNameBottom}", HighLogic.Skin.label);
+            GUILayout.Label("  WARNING: Higher quality = MUCH lower FPS!", HighLogic.Skin.label);
             
             GUILayout.Space(20);
             
@@ -158,11 +152,12 @@ namespace KerbVisionIR
                 ScreenMessages.PostScreenMessage("Settings reset to defaults", 2f, ScreenMessageStyle.UPPER_CENTER);
             }
             
+            GUILayout.FlexibleSpace();
+            
             if (GUILayout.Button("Save & Close", GUILayout.Height(30)))
             {
                 SaveSettings();
-                windowVisible = false;
-                ScreenMessages.PostScreenMessage("Settings saved", 2f, ScreenMessageStyle.UPPER_CENTER);
+                ToggleWindow();
             }
             
             GUILayout.EndHorizontal();

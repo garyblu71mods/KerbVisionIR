@@ -49,7 +49,7 @@ namespace KerbVisionIR
                 settings.Brightness = ParseFloatRange(visionNode, "brightness", 1.0f, 0f, 2f);
                 settings.Contrast = ParseFloatRange(visionNode, "contrast", 0.0f, -0.5f, 0.5f);
                 settings.TintStrength = ParseFloat(visionNode, "tintStrength", 0.8f);
-                settings.GrainIntensity = ParseFloatRange(visionNode, "grainIntensity", 0.7f, 0f, 3f);
+                settings.GrainIntensity = ParseFloatRange(visionNode, "grainIntensity", 0.7f, 0f, 4f);
                 settings.ProcessingQuality = ParseInt(visionNode, "processingQuality", 4);
                 settings.ToggleKey = ParseEnum<KeyCode>(visionNode, "toggleKey", KeyCode.BackQuote);
                 
