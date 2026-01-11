@@ -1,50 +1,60 @@
-# KerbVision IR - Night Vision & Infrared Camera Mod
+# KerbVision IR
 
-**Night vision and thermal imaging effects for Kerbal Space Program**
+Night Vision and Infrared camera mod for Kerbal Space Program.
 
 ## Features
 
-?? **Night Vision Mode**
-- Grayscale or classic green-tinted NV effect
-- Adjustable brightness, contrast, and gamma
-- Real-time post-processing shader
-
-?? **Thermal/IR Vision** 
-- Infrared camera simulation
-- Customizable color grading and tint strength
-
-? **Visual Effects**
-- Optional bloom/glow effect
-- Film grain/noise for authenticity
-- Vignette and scanlines for immersion
-- Fully configurable via in-game GUI
-
-?? **User-Friendly**
-- Stock toolbar integration (no dependencies!)
-- Compact settings window with sliders
-- Hotkey toggle (default: **Alt + I**)
-- Per-scene settings persistence
+- **Performance-optimized** - Uses low-resolution grayscale conversion with ambient light boost
+- **Three vision modes:**
+  - Monochrome - Classic black & white
+  - Green NV - Traditional night vision (green tint)
+  - Amber/Warm - Infrared/thermal style (orange tint)
+- **Customizable settings:**
+  - Brightness (0-2) - Ambient light boost
+  - Contrast (-1 to 1) - Image contrast adjustment
+  - Color Tint (0-1) - Tint strength
+  - Grain (0-1) - Static noise overlay
+- **Hotkey:** Alt + ` (backtick/gravis)
+- **Stock toolbar integration** - No dependencies required
 
 ## Installation
 
 1. Download the latest release
-2. Extract to your KSP `GameData` folder
-3. Launch KSP and look for the ?? icon in the toolbar
+2. Extract to `GameData/KerbVisionIR/`
+3. Launch KSP
 
 ## Usage
 
-- Press **Alt + I** to toggle night vision on/off
-- Click the toolbar icon to open settings and adjust:
-  - **Brightness** - Overall brightness and exposure
-  - **Contrast** - Image contrast level
-  - **Gamma** - Gamma correction
-  - **Tint Strength** - Color tint intensity
-  - **Mode** - Grayscale / Green NV / IR High Contrast
-  - **Bloom** - Glow effect on bright areas
-  - **Grain** - Film grain/noise
+- Press **Alt + `** to toggle night vision on/off
+- Click the toolbar button to open settings
+- Adjust sliders in real-time - changes are immediate
+- Settings are saved automatically
 
-## Vision Modes
+## Requirements
 
-- **Grayscale** - Pure monochrome night vision
-- **Green NV** - Classic military night vision with green phosphor
-- **IR High Contrast** - Infrared thermal imaging style
+- Kerbal Space Program 1.8+
+- .NET Framework 4.8
+
+## Building from Source
+
+1. Clone this repository
+2. Open `KerbVisionIR.csproj` in Visual Studio
+3. Add reference to KSP assemblies:
+   - `Assembly-CSharp.dll`
+   - `UnityEngine.dll`
+   - `UnityEngine.CoreModule.dll`
+   - `UnityEngine.UI.dll`
+4. Build (Debug or Release)
+5. Copy `bin/[Debug|Release]/KerbVisionIR.dll` to `GameData/KerbVisionIR/Plugins/`
+
+## License
+
+MIT License - See LICENSE file for details
+
+## Credits
+
+Created by garyblu71mods
+
+## Version
+
+Current: v0.4.3-TEST (2025-01-09)
