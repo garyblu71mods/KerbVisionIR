@@ -57,4 +57,4 @@ Created by garyblu71mods
 
 ## Version
 
-Current: v0.4.3-TEST (2025-01-09)
+Current: v0.5.0 (2026-01-11)
