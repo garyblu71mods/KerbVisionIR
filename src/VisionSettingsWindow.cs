@@ -123,7 +123,7 @@ namespace KerbVisionIR
             
             // Processing Quality slider
             GUILayout.BeginHorizontal();
-            string[] qualityLabels = { "Full (1/1)", "High (1/2)", "Med (1/3)", "Low (1/4)" };
+            string[] qualityLabels = { "Full", "High", "Medium", "Low" };
             int qualityIndex = settings.ProcessingQuality - 1;
             GUILayout.Label($"Quality: {qualityLabels[qualityIndex]}", GUILayout.Width(150));
             int newQualityIndex = Mathf.RoundToInt(GUILayout.HorizontalSlider(qualityIndex, 0f, 3f, GUILayout.Width(180)));

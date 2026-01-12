@@ -261,7 +261,7 @@ namespace KerbVisionIR
         
         private void ApplyGrayscaleEffect(RenderTexture source, RenderTexture destination, VisionSettings settings)
         {
-            // Quality setting: 1=full, 2=1/2, 3=1/3, 4=1/4
+            // Quality setting: 1=Full, 2=High, 3=Medium, 4=Low (internal divisor)
             int divisor = settings.ProcessingQuality;
             int processWidth = source.width / divisor;
             int processHeight = source.height / divisor;

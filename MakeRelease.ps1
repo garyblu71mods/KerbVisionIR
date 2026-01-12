@@ -78,9 +78,15 @@ Write-Host "GameData files copied successfully!" -ForegroundColor Green
 # Copy documentation
 Write-Host "Copying documentation..." -ForegroundColor Yellow
 Copy-Item -Path (Join-Path $ProjectRoot "README.md") -Destination $PackageDir -Force
-Copy-Item -Path (Join-Path $ProjectRoot "QUICKSTART.md") -Destination $PackageDir -Force
-Copy-Item -Path (Join-Path $ProjectRoot "USERGUIDE.md") -Destination $PackageDir -Force
-Copy-Item -Path (Join-Path $ProjectRoot "FEATURES.md") -Destination $PackageDir -Force
+if (Test-Path (Join-Path $ProjectRoot "QUICKSTART.md")) {
+    Copy-Item -Path (Join-Path $ProjectRoot "QUICKSTART.md") -Destination $PackageDir -Force
+}
+if (Test-Path (Join-Path $ProjectRoot "USERGUIDE.md")) {
+    Copy-Item -Path (Join-Path $ProjectRoot "USERGUIDE.md") -Destination $PackageDir -Force
+}
+if (Test-Path (Join-Path $ProjectRoot "FEATURES.md")) {
+    Copy-Item -Path (Join-Path $ProjectRoot "FEATURES.md") -Destination $PackageDir -Force
+}
 Copy-Item -Path (Join-Path $ProjectRoot "CHANGELOG.md") -Destination $PackageDir -Force
 Copy-Item -Path (Join-Path $ProjectRoot "LICENSE") -Destination $PackageDir -Force
 
@@ -104,6 +110,11 @@ Write-Host ""
 $ZipSize = (Get-Item $ZipPath).Length
 $ZipSizeKB = [math]::Round($ZipSize / 1KB, 2)
 
+# Calculate SHA256 hash for CKAN
+Write-Host ""
+Write-Host "Calculating SHA256 hash..." -ForegroundColor Yellow
+$Hash = Get-FileHash -Path $ZipPath -Algorithm SHA256
+
 Write-Host "==================================" -ForegroundColor Cyan
 Write-Host "Release Package Complete!" -ForegroundColor Green
 Write-Host "==================================" -ForegroundColor Cyan
@@ -111,6 +122,9 @@ Write-Host "Version:     $Version" -ForegroundColor White
 Write-Host "Package:     $ReleaseName.zip" -ForegroundColor White
 Write-Host "Size:        $ZipSizeKB KB" -ForegroundColor White
 Write-Host "Location:    $ZipPath" -ForegroundColor White
+Write-Host ""
+Write-Host "SHA256 Hash (for CKAN):" -ForegroundColor Yellow
+Write-Host $Hash.Hash -ForegroundColor White
 Write-Host ""
 Write-Host "Package contents:" -ForegroundColor Yellow
 Write-Host "  - GameData/KerbVisionIR/" -ForegroundColor White
@@ -124,6 +138,13 @@ Write-Host "  - USERGUIDE.md" -ForegroundColor White
 Write-Host "  - FEATURES.md" -ForegroundColor White
 Write-Host "  - CHANGELOG.md" -ForegroundColor White
 Write-Host "  - LICENSE" -ForegroundColor White
+Write-Host ""
+Write-Host "=== Next Steps for CKAN Release ===" -ForegroundColor Cyan
+Write-Host "1. Test the package locally" -ForegroundColor White
+Write-Host "2. Create GitHub release with tag: v$Version" -ForegroundColor White
+Write-Host "3. Upload $ReleaseName.zip to GitHub release" -ForegroundColor White
+Write-Host "4. Submit KerbVisionIR.netkan to CKAN NetKAN repo" -ForegroundColor White
+Write-Host "   (See CKAN-PUBLISHING-GUIDE.md for details)" -ForegroundColor White
 Write-Host ""
 Write-Host "Ready for distribution!" -ForegroundColor Green
 Write-Host "==================================" -ForegroundColor Cyan

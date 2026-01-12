@@ -85,7 +85,14 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Shaders\NightVisionShader.shader" />
+    <None Include="CHANGELOG.md" />
+    <None Include="CKAN-CHECKLIST.md" />
+    <None Include="CKAN-PUBLISHING-GUIDE.md" />
+    <None Include="CKAN-VALIDATION.md" />
     <None Include="GameData\KerbVisionIR\Shaders\NightVision.shader" />
+    <None Include="KerbVisionIR.ckan" />
+    <None Include="KerbVisionIR.netkan" />
+    <None Include="START-HERE.md" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
