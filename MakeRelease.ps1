@@ -65,6 +65,18 @@ $GameDataSource = Join-Path $ProjectRoot "GameData\KerbVisionIR"
 Copy-Item -Path (Join-Path $GameDataSource "Shaders") -Destination $ModDest -Recurse -Force
 Copy-Item -Path (Join-Path $GameDataSource "PluginData") -Destination $ModDest -Recurse -Force
 
+# Copy Icons if they exist
+if (Test-Path (Join-Path $GameDataSource "Icons")) {
+    Copy-Item -Path (Join-Path $GameDataSource "Icons") -Destination $ModDest -Recurse -Force
+    Write-Host "Icons copied!" -ForegroundColor Green
+}
+
+# Copy Sounds if they exist
+if (Test-Path (Join-Path $GameDataSource "Sounds")) {
+    Copy-Item -Path (Join-Path $GameDataSource "Sounds") -Destination $ModDest -Recurse -Force
+    Write-Host "Sounds copied!" -ForegroundColor Green
+}
+
 # Create Plugins directory and copy DLL
 $PluginsDir = Join-Path $ModDest "Plugins"
 New-Item -ItemType Directory -Path $PluginsDir | Out-Null
@@ -130,12 +142,24 @@ Write-Host "Package contents:" -ForegroundColor Yellow
 Write-Host "  - GameData/KerbVisionIR/" -ForegroundColor White
 Write-Host "    - Plugins/KerbVisionIR.dll" -ForegroundColor White
 Write-Host "    - Shaders/NightVision.shader" -ForegroundColor White
-Write-Host "    - PluginData/settings.cfg" -ForegroundColor White
+Write-Host "    - PluginData/" -ForegroundColor White
+if (Test-Path (Join-Path $GameDataSource "Icons")) {
+    Write-Host "    - Icons/" -ForegroundColor White
+}
+if (Test-Path (Join-Path $GameDataSource "Sounds")) {
+    Write-Host "    - Sounds/" -ForegroundColor White
+}
 Write-Host "    - KerbVisionIR.version" -ForegroundColor White
 Write-Host "  - README.md" -ForegroundColor White
-Write-Host "  - QUICKSTART.md" -ForegroundColor White
-Write-Host "  - USERGUIDE.md" -ForegroundColor White
-Write-Host "  - FEATURES.md" -ForegroundColor White
+if (Test-Path (Join-Path $ProjectRoot "QUICKSTART.md")) {
+    Write-Host "  - QUICKSTART.md" -ForegroundColor White
+}
+if (Test-Path (Join-Path $ProjectRoot "USERGUIDE.md")) {
+    Write-Host "  - USERGUIDE.md" -ForegroundColor White
+}
+if (Test-Path (Join-Path $ProjectRoot "FEATURES.md")) {
+    Write-Host "  - FEATURES.md" -ForegroundColor White
+}
 Write-Host "  - CHANGELOG.md" -ForegroundColor White
 Write-Host "  - LICENSE" -ForegroundColor White
 Write-Host ""

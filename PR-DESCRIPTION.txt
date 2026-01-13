@@ -1,0 +1,45 @@
+# GOTOWY OPIS DO PULL REQUEST
+
+Skopiuj poni?szy tekst do PR description na GitHubie:
+
+---
+
+# Add KerbVisionIR - Night Vision mod
+
+## Mod Information
+- **Name**: KerbVision IR - Night Vision
+- **Version**: 0.5.0
+- **Author**: garyblu71mods
+- **License**: MIT
+- **KSP Version**: 1.8.0 - 1.12.99
+
+## Description
+Night Vision mod for Kerbal Space Program with old-school CRT artifacts.
+
+Features:
+- 3 Vision Modes: Monochrome, Green NV, Amber/Warm
+- Adjustable Settings: Brightness, Contrast, Color Tint, Grain
+- Processing Quality options (Full, High, Medium, Low)
+- CRT Artifacts: Scanlines, phosphor spots, rolling bars, vignette
+- Audio feedback on activation
+- Hotkey support (Alt + `)
+- Toolbar integration
+
+## Links
+- Repository: https://github.com/garyblu71mods/KerbVisionIR
+- Release: https://github.com/garyblu71mods/KerbVisionIR/releases/tag/v0.5.0
+
+## Checklist
+- [x] .netkan file follows CKAN spec v1.4
+- [x] GitHub release exists with proper tag (v0.5.0)
+- [x] .version file included in mod
+- [x] LICENSE file included (MIT)
+- [x] Tested locally
+
+---
+
+URL DO PULL REQUEST:
+https://github.com/garyblu71mods/NetKAN/pull/new/add-kerbvisionir
+
+LUB KLIKNIJ LINK KTÓRY CI POKAZA? GIT:
+https://github.com/garyblu71mods/NetKAN/pull/new/add-kerbvisionir
